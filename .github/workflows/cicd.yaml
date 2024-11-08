@@ -1,0 +1,14 @@
+name: Frontend deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+       - run: echo "Pipeline testing..."
