@@ -13,15 +13,40 @@ jobs:
     steps:
        - run: echo "Pipeline testing..."
 
-  security:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@master
-      - uses: snyk/actions/setup@master
-      - uses: actions/setup-go@v1
-        with:
-          go-version: '1.22'
-      - name: Snyk monitor
-        run: snyk test
-        env:
-          SNYK_TOKEN: 6b2ca679-e7e1-4870-af6d-70f7a3c0c26f
+    - name: Checkout current repository
+      uses: actions/checkout@v4
+
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        # build-args: -v /home/runner/.bun:/root/.bun
+        push: false
+        tags: simple-go-backend:${{ github.sha }}
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+  #   security:
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - uses: actions/checkout@master
+  #       - uses: snyk/actions/setup@master
+  #       - uses: actions/setup-go@v1
+  #         with:
+  #           go-version: '1.22'
+  #       - name: Snyk monitor
+  #         run: snyk test
+  #         env:
+  #           SNYK_TOKEN: 6b2ca679-e7e1-4870-af6d-70f7a3c0c26f
+  # 
+  #           name: _task-build
+
