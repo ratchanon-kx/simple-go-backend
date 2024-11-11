@@ -28,6 +28,16 @@ jobs:
         push: false
         tags: simple-go-backend:${{ github.sha }}
 
+    - name: Set-Env for Trivy
+      run: |
+        echo "TRIVY_DB_REPOSITORY=public.ecr.aws/aquasecurity/trivy-db" >> $GITHUB_ENV
+
+    - name: Debugging
+      run: |
+        echo ""
+        printenv
+        echo "====="
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.28.0
       with:
