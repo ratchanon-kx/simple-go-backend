@@ -41,7 +41,7 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.28.0
       with:
-        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+        image-ref: 'simple-go-backend:${{ github.sha }}'
         format: 'sarif'
         output: 'trivy-results.sarif'
 
