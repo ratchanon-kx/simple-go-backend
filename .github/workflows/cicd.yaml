@@ -43,7 +43,10 @@ jobs:
       with:
         image-ref: 'simple-go-backend:${{ github.sha }}'
         format: 'table'
-        output: 'trivy-results.txt'
+        output: 'trivy.txt'
+
+    - name: Check result
+      run: cat trivy.txt
 
     - name: Publish Trivy Output to Summary
       run: |
