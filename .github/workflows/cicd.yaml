@@ -42,8 +42,22 @@ jobs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: 'simple-go-backend:${{ github.sha }}'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
+        format: 'table'
+        output: 'trivy-results.txt'
+
+    - name: Publish Trivy Output to Summary
+      run: |
+        if [[ -s trivy.txt ]]; then
+          {
+            echo "### Security Output"
+            echo "<details><summary>Click to expand</summary>"
+            echo ""
+            echo '```'
+            cat trivy.txt
+            echo '```'
+            echo "</details>"
+          } >> $GITHUB_STEP_SUMMARY
+        fi
 
   #   security:
   #     runs-on: ubuntu-latest
