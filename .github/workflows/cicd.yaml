@@ -30,6 +30,7 @@ jobs:
 
     - name: Set-Env for Trivy
       run: |
+        echo "TRIVY_DISABLE_VEX_NOTICE=true" >> $GITHUB_ENV
         echo "TRIVY_DB_REPOSITORY=public.ecr.aws/aquasecurity/trivy-db" >> $GITHUB_ENV
 
     - name: Debugging
@@ -45,15 +46,15 @@ jobs:
         format: 'table'
         output: 'trivy.txt'
 
-    - name: Check result
-      run: cat trivy.txt
+    - name: Run URL
+      run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
     - name: Publish Trivy Output to Summary
       run: |
         if [[ -s trivy.txt ]]; then
           {
-            echo "### Security Output"
-            echo "<details><summary>Click to expand</summary>"
+            echo "<h2>Trivy scan summary</h2>"
+            echo "<details><summary><strong>Vulnerability results</strong></summary>"
             echo ""
             echo '```'
             cat trivy.txt
