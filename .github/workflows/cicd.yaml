@@ -15,73 +15,15 @@ jobs:
     - name: Checkout current repository
       uses: actions/checkout@v4
 
-    - name: Build and push
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        # build-args: -v /home/runner/.bun:/root/.bun
-        push: false
-        tags: simple-go-backend:${{ github.sha }}
-
-      # - name: Set-Env for Trivy
-      #   run: |
-      #     echo "TRIVY_DISABLE_VEX_NOTICE=true" >> $GITHUB_ENV
-      #     echo "TRIVY_DB_REPOSITORY=public.ecr.aws/aquasecurity/trivy-db" >> $GITHUB_ENV
-
-      # - name: Run Trivy vulnerability scanner
-      #   uses: aquasecurity/trivy-action@0.28.0
-      #   with:
-      #     image-ref: 'simple-go-backend:${{ github.sha }}'
-      #     format: 'table'
-      #     output: 'trivy.txt'
-
-      # - name: Run URL
-      #   run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-      # - name: Publish Trivy Output to Summary
-      #   run: |
-      #     if [[ -s trivy.txt ]]; then
-      #       {
-      #         echo "<h2>Trivy scan summary</h2>"
-      #         echo "<details><summary><strong>Vulnerability results</strong></summary>"
-      #         echo ""
-      #         echo '```'
-      #         cat trivy.txt
-      #         echo '```'
-      #         echo "</details>"
-      #       } >> $GITHUB_STEP_SUMMARY
-      #     fi
-
-  vulnerability-scan:
-    needs: [build]
-
-    steps:
-    - name: Set-Env for Trivy
+    - name: Create new file
       run: |
-        echo "TRIVY_DISABLE_VEX_NOTICE=true" >> $GITHUB_ENV
-        echo "TRIVY_DB_REPOSITORY=public.ecr.aws/aquasecurity/trivy-db" >> $GITHUB_ENV
+        echo "This is new file from pipeline.${{ github.head_ref }}.${{ github.sha }}" > new_temp.txt
 
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.28.0
+    - name: Upload to gdrive
+      uses: adityak74/google-drive-upload-git-action@main
       with:
-        image-ref: 'simple-go-backend:${{ github.sha }}'
-        format: 'table'
-        output: 'trivy.txt'
-
-    - name: Run URL
-      run: echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-    - name: Publish Trivy Output to Summary
-      run: |
-        if [[ -s trivy.txt ]]; then
-          {
-            echo "<h2>Trivy scan summary</h2>"
-            echo "<details><summary><strong>Vulnerability results</strong></summary>"
-            echo ""
-            echo '```'
-            cat trivy.txt
-            echo '```'
-            echo "</details>"
-          } >> $GITHUB_STEP_SUMMARY
-        fi
-
+        credentials: ${{ secrets.CREDENTIALS }}
+        filename: "new_temp.txt"
+        folderId: ${{ secrets.FOLDER_ID }}
+        name: "target_name.txt" # optional string
+        overwrite: "true" # optional boolean
