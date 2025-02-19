@@ -26,6 +26,6 @@ jobs:
         credentials: ${{ secrets.CREDENTIALS }}
         filename: "w/x/y/new_temp.txt"
         folderId: ${{ secrets.FOLDER_ID }}
-        name: "target_name.txt" # optional string
+        name: apt/target_name.txt # optional string
         overwrite: "true" # optional boolean
-        mirrorDirectoryStructure: "true"
+          # mirrorDirectoryStructure: "true"
