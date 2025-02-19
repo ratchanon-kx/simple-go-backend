@@ -17,13 +17,15 @@ jobs:
 
     - name: Create new file
       run: |
-        echo "This is new file from pipeline.${{ github.head_ref }}.${{ github.sha }}" > new_temp.txt
+        mkdir -p w/x/y
+        echo "This is new file from pipeline.${{ github.head_ref }}.${{ github.sha }}" > w/x/y/new_temp.txt
 
     - name: Upload to gdrive
       uses: adityak74/google-drive-upload-git-action@main
       with:
         credentials: ${{ secrets.CREDENTIALS }}
-        filename: "new_temp.txt"
+        filename: "w/x/y/new_temp.txt"
         folderId: ${{ secrets.FOLDER_ID }}
         name: "target_name.txt" # optional string
         overwrite: "true" # optional boolean
+        mirrorDirectoryStructure: "true"
